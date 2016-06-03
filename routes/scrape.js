@@ -1,6 +1,7 @@
 var express = require('express')
-var request = require('request');
-var cheerio = require('cheerio');
+var request = require('request')
+var cheerio = require('cheerio')
+var status = require('http-status')
 
 var router = express.Router()
 
@@ -15,8 +16,9 @@ router.get('/',function (req, res) {
     request(url, function(err, resp, html){
             if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
             var rawJobs = scraper.getJobs(html)
-            console.log("Raw JObs : "+rawJobs.length)
-            res.json({jobs_parsed : rawJobs.length})
+        	console.log(rawJobs)
+            //console.log("Raw JObs : "+JSON.stringify(rawJobs))
+            
     })
   })
 
