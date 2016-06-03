@@ -2,15 +2,13 @@ var express = require('express')
 var router = express.Router()
 var status = require('http-status')
 
-var db = require('../db')
-
 var mongoose = require('mongoose')
 var Jobs = mongoose.model('Job')
 
 // CRUD for Jobs
 router.route('/jobs')
       .get(function (req, res) {
-        Jobs.find(function (err, jobs) {
+        Jobs.find({}, 'job_id job_name company', function (err, jobs) {
           if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
           res.json({results: jobs})
         })
