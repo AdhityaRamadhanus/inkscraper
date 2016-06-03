@@ -4,7 +4,7 @@ var Schema = mongoose.Schema
 // Job Schema
 var JobSchema = Schema({
   // id tapi bukan ObjectId MongoDB
-  job_id: {type: String, required: true},
+  job_id: {type: String, required: true,unique : true},
   job_name: {type: String, required: true},
   company: {type: String, required: true},
   // URI
