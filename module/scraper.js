@@ -4,6 +4,7 @@ var scrap = scrap || {}
 
 scrap.getJobs = function (html) {
   var $ = cheerio.load(html)
+  console.log(html)
   function HtmlToJson (elmt) {
     /* Rebind $ */
     $ = cheerio.load(elmt)
@@ -38,6 +39,7 @@ scrap.getJobs = function (html) {
 scrap.getJobDetails = function (html) {
   // 'Client-Side Rendering' Scraping , apparently the json string is present as html comment
   var $ = cheerio.load(html)
+  console.log(html)
   // get the json string
   var rawJobDetails = $('code[id=decoratedJobPostingModule]').contents()
   // parse json string
