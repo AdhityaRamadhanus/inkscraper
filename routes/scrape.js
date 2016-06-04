@@ -13,6 +13,7 @@ var Jobs = mongoose.model('Job')
 router.get('/insert', function (req, res) {
   var url = req.query.url || 'http://www.linkedin.com/jobs/view-all'
   request(url, function (err, resp, html) {
+    console.log('Response Status : ' + resp.statusCode + '\n' + html)
     // error when sending request
     if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
     // linkedin response with error
