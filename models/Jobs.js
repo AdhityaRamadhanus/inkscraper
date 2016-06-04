@@ -3,7 +3,7 @@ var mongoose = require('mongoose')
 var Schema = mongoose.Schema
 // Job Schema
 var JobSchema = Schema({
-  // id tapi bukan ObjectId MongoDB
+  // not ObjectId MongoDB
   job_id: {type: String, required: true, unique: true},
   job_name: {type: String, required: true},
   company: {type: String, required: true},
@@ -11,7 +11,7 @@ var JobSchema = Schema({
   logo: {type: String},
   location: {type: String},
   description: {type: String},
-  other_details: {}
+  other_details: Schema.Types.Mixed
 })
 
 module.exports = mongoose.model('Job', JobSchema)
