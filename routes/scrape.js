@@ -15,9 +15,13 @@ router.get('/', function (req, res) {
     if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
     if (resp.statusCode === 404 || resp.statusCode === 500) return res.status(resp.statusCode).send('Error ' + resp.statusCode)
     var rawJobs = scraper.getJobs(html)
-    Jobs.collection.insert(rawJobs, {}, function (err, jobs) {
-      if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
-      res.send('Jobs Parsed')
+    Jobs.collection.insert(rawJobs, {ordered: false}, function (err, result) {
+      if (err) console.error(err)
+      if (rawJobs.length === result.insertedCount){
+        res.send('Scrape Done ,' + result.insertedCount + ' Inserted')
+      } else{
+        console.log(result)
+      } res.send('Write Operation failed Check Log , ' + result.insertedCount + ' Inserted')
     })
   })
 })
