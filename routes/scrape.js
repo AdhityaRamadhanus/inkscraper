@@ -13,7 +13,7 @@ var Jobs = mongoose.model('Job')
 router.get('/insert', function (req, res) {
   var url = req.query.url || 'http://www.linkedin.com/jobs/view-all'
   var headers = { 
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:24.0) Gecko/20100101 Firefox/24.0' 
+    User-Agent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36' 
   };
   request({url: url, headers: headers}, function (err, resp, html) {
     console.log('Response Status : ' + resp.statusCode + '\n' + html)
