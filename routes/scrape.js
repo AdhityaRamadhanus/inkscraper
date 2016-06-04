@@ -11,7 +11,7 @@ var Jobs = mongoose.model('Job')
 // Scraping Endpoint
 // Insert operation, every jobs (if any) will be inserted using bulk insert operation
 router.get('/insert', function (req, res) {
-  var url = req.query.url || 'https://www.linkedin.com/jobs/view-all'
+  var url = req.query.url || 'http://www.linkedin.com/jobs/view-all'
   request(url, function (err, resp, html) {
     // error when sending request
     if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
