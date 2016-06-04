@@ -12,7 +12,10 @@ var Jobs = mongoose.model('Job')
 // Insert operation, every jobs (if any) will be inserted using bulk insert operation
 router.get('/insert', function (req, res) {
   var url = req.query.url || 'http://www.linkedin.com/jobs/view-all'
-  request(url, function (err, resp, html) {
+  var headers = { 
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:24.0) Gecko/20100101 Firefox/24.0' 
+  };
+  request({url: url, headers: headers}, function (err, resp, html) {
     console.log('Response Status : ' + resp.statusCode + '\n' + html)
     // error when sending request
     if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
