@@ -4,6 +4,8 @@ var express = require('express')
 var request = require('request')
 var status = require('http-status')
 var scraper = require('../module/scraper')
+var urlBuilder = require('../helper/linkedin-url')
+var async = require('async');
 var router = express.Router()
 /* Load Model */
 var mongoose = require('mongoose')
@@ -12,14 +14,7 @@ var Jobs = mongoose.model('Job')
 // Insert operation, every jobs (if any) will be inserted using bulk insert operation
 router.get('/insert', function (req, res) {
   var url = req.query.url || 'http://www.linkedin.com/jobs/view-all'
-  var options = {
-    url: url,
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'
-    }
-  }
-  request(options, function (err, resp, html) {
-    console.log('Response Status : ' + resp.statusCode + '\n' + html)
+  request(url, function (err, resp, html) {
     // error when sending request
     if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
     // linkedin response with error
@@ -41,7 +36,6 @@ router.get('/insert', function (req, res) {
 // Upsert operation, every jobs (if any) will be upserted, this operation is slower than bulk insert, this is for sync
 router.get('/update', function (req, res) {
   var url = req.query.url || 'https://www.linkedin.com/jobs/view-all'
-  console.log(url)
   request(url, function (err, resp, html) {
     // error when sending request
     if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
@@ -60,6 +54,35 @@ router.get('/update', function (req, res) {
         })
     })
     res.send('Scrape Done ,' + rawJobs.length + ' Upserted')
+  })
+})
+
+router.get('/details', function (req, res) {
+  Jobs.find({}, 'job_id', function (err, jobs) {
+    if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
+    var processed = 0
+    var jobQueue = async.queue(function (job, callback) {
+      var url = urlBuilder.buildDetailUrl(job.job_id)
+      request(url, function (err, resp, html) {
+        if (err) console.error('Scraping ' + task.job_id + ' got error ' + err.toString())
+        if (resp.statusCode === 404 || resp.statusCode === 500) console.error('Scraping ' + task.job_id + ' got error ' + resp.statusCode)
+        var details = scraper.getJobDetails(html)
+        //console.log(details)
+        job.other_details = details
+        job.save(function (err, job){
+          if (err) console.error('Updating ' + task.job_id + ' got error ' + err.toString())
+          processed++
+          callback()
+        })
+      })
+    }, 2)
+
+    jobQueue.drain = function () {
+      res.send('Scraping Detail Done , ' + processed + ' Updated')
+    }
+    jobQueue.push(jobs, function (err) {
+      console.log('Finished Updating Job Details');
+    })
   })
 })
 module.exports = router

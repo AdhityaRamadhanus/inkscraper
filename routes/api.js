@@ -23,23 +23,28 @@ router.route('/jobs')
       res.status(201).json({message: 'Job Successfully Created!', job: job})
     })
   })
+  .delete(function (req, res) {
+    Jobs.remove({}, function (err) {
+      if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
+      res.status(201).json({message: 'All Job Successfully Deleted!'})
+    })
+  })
 
 router.route('/jobs/:job_id')
   .get(function (req, res) {
     Jobs.findOne({job_id : req.params.job_id}, function (err, job) {
       if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
       if (job == null)  return res.status(status.NOT_FOUND).json({error: "Job not found!"})
-      if (job.other_details == null) { //Scrape the Details
-      var url = urlBuilder.buildDetailUrl(job.job_id)
-      console.log('detail url ' + url)
-      request(url, function (err, resp, html) {
-        if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
-        if (resp.statusCode === 404 || resp.statusCode === 500) return res.status(resp.statusCode).send('Error ' + resp.statusCode)
-        var details = scraper.getJobDetails(html)
-        console.log(details)
-        job.other_details = details
-        job.save(function (err, job){
-        if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
+      if (job.other_details == null) { //Scrape the Details, unless we're in prod (heroku)
+        var url = urlBuilder.buildDetailUrl(job.job_id)
+        request(url, function (err, resp, html) {
+          if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
+          if (resp.statusCode === 404 || resp.statusCode === 500) return res.status(resp.statusCode).send('Error ' + resp.statusCode)
+          var details = scraper.getJobDetails(html)
+          console.log(details)
+          job.other_details = details
+          job.save(function (err, job){
+            if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
                 res.json({job: job})
               })
             })
