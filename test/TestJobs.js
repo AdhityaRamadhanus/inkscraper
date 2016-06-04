@@ -1,9 +1,9 @@
 'use strict'
 require('should')
 require('assert')
+var server = require('../server')
 var supertest = require('supertest')
 
-var server = supertest.agent('http://localhost:3000')
 
 describe('Jobs Endpoint', function () {
   it('Can add job', function (done) {
@@ -15,7 +15,7 @@ describe('Jobs Endpoint', function () {
       location: 'Jakarta',
       description: 'NodeJs Engineer'
     }
-    server
+    supertest(server)
       .post('/api/jobs')
       .send(job)
       .end(function (err, res) {
@@ -31,7 +31,7 @@ describe('Jobs Endpoint', function () {
     var job = {
       job_name: 'Software Engineer Test'
     }
-    server
+    supertest(server)
       .put('/api/jobs/Test100')
       .send(job)
       .end(function (err, res) {
@@ -43,7 +43,7 @@ describe('Jobs Endpoint', function () {
       })
   })
   it('Can delete job', function (done) {
-    server
+    supertest(server)
       .delete('/api/jobs/Test100')
       .end(function (err, res) {
         if (err) {
