@@ -27,6 +27,18 @@ describe('Jobs Endpoint', function () {
         done()
       })
   })
+  it('Get specific job', function (done) {
+    supertest(server)
+      .get('/api/jobs/Test100')
+      .end(function (err, res) {
+        if (err) {
+          throw err
+        }
+        res.status.should.equal(200)
+        res.body.job.job_id.should.equal('Test100')
+        done()
+      })
+  })
   it('Can modify job', function (done) {
     var job = {
       job_name: 'Software Engineer Test'
