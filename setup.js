@@ -23,6 +23,7 @@ module.exports = function (app, express) {
   app.use(express.static(path.join(__dirname, 'public')))
 
   // App Routes
+  app.use('/', express.static(__dirname + '/apidoc'))
   app.use('/scrape', scrapeRoutes)
   app.use('/api', apiRoutes)
 
