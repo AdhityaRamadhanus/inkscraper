@@ -1,6 +1,6 @@
 {
   "name": "HireMe",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "start": "node server.js",
@@ -25,5 +25,14 @@
     "mocha": "^2.5.3",
     "should": "^9.0.0",
     "supertest": "^1.2.0"
+  },
+  "apidoc": {
+    "name": "Linkedin Scraper",
+    "version": "0.1.0",
+    "description": "Linkedin Jobs scraper",
+    "apidoc": {
+      "title": "Linkedin Scraper REST API Documentation",
+      "url" : "https://github.com/AdhityaRamadhanus/Linkedin-Scraper"
+    }
   }
 }
