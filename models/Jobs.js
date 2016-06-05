@@ -14,4 +14,6 @@ var JobSchema = Schema({
   other_details: Schema.Types.Mixed
 })
 
+JobSchema.index({ job_id: 'text', job_name: 'text', company: 'text', location: 'text'})
+
 module.exports = mongoose.model('Job', JobSchema)

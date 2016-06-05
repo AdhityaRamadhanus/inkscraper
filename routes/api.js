@@ -12,12 +12,28 @@ var Jobs = mongoose.model('Job')
 // CRUD for Jobs
 router.route('/jobs')
   .get(function (req, res) {
-    Jobs.find({}, 'job_id job_name company', function (err, jobs) {
-      if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
-      res.json({results: jobs})
-    })
+    if (req.query.q == null){
+      Jobs.find({}, 'job_id job_name company location', function (err, jobs) {
+        if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
+        res.json({results: jobs})
+      })
+    }
+    else{
+      Jobs
+        .find(
+          { $text : { $search : req.query.q }}, 
+          { score : { $meta: 'textScore' }})
+        .sort({ score : { $meta : 'textScore' } })
+        .limit(10)
+        .select('job_id job_name company location')
+        .exec(function(err, jobs) {
+          if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
+          res.json({results: jobs})
+        })
+    }
   })
   .post(function (req, res) {
+    // Keep it simple haha
     Jobs(req.body).save(function (err, job) {
       if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
       res.status(201).json({message: 'Job Successfully Created!', job: job})

@@ -58,7 +58,8 @@ router.get('/update', function (req, res) {
 })
 
 router.get('/details', function (req, res) {
-  Jobs.find({}, 'job_id', function (err, jobs) {
+  Jobs.find({other_details: null}, 'job_id', function (err, jobs) {
+    //console.log(jobs.length)
     if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
     var processed = 0
     var jobQueue = async.queue(function (job, callback) {
