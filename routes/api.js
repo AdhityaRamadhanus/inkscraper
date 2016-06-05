@@ -2,9 +2,9 @@
 var express = require('express')
 var router = express.Router()
 var status = require('http-status')
-var request = require('request')
+/* var request = require('request')
 var scraper = require('../module/scraper')
-var urlBuilder = require('../helper/linkedin-url')
+var urlBuilder = require('../helper/linkedin-url')*/
 /* Load Model */
 var mongoose = require('mongoose')
 var Jobs = mongoose.model('Job')
@@ -41,7 +41,7 @@ router.route('/jobs')
   * @apiParam {String} company Company Name
   * @apiParam {String} logo Logo Image URI
   * @apiParam {String} location Job Location
-  * @apiParam {String} description Job description 
+  * @apiParam {String} description Job description
   * @apiParam {Object} other_details Job Details, it's an object you can insert any details you need
   * @apiSuccess {String} message message containing "Job Successfully Created!"
   * @apiSuccess {Object} job Job Object that just created
@@ -58,7 +58,7 @@ router.route('/jobs')
   *     HTTP/1.1 200 OK
   *     {
           "message": "Job Successfully Created!",
-          "job": 
+          "job":
             {
               "__v": 0,
               "job_id": "Test100",
@@ -82,8 +82,7 @@ router.route('/jobs')
   * @api {delete} api/jobs Delete all jobs
   * @apiName DeleteJobs
   * @apiGroup Jobs
-  * 
-  * @apiSuccess {String} message 'All Job Successfully Deleted!' 
+  * @apiSuccess {String} message 'All Job Successfully Deleted!'
   * @apiSuccessExample Success-Response:
   *     HTTP/1.1 200 OK
   *     {"message": "All Job Successfully Deleted!"}
@@ -130,12 +129,12 @@ router.route('/jobs/:job_id')
       }
   */
   .get(function (req, res) {
-    Jobs.findOne({job_id : req.params.job_id}, function (err, job) {
+    Jobs.findOne({job_id: req.params.job_id}, function (err, job) {
       if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
-      if (job == null)  return res.status(status.NOT_FOUND).json({error: "Job not found!"})
-      // Initially i want to implement some "lazy load" kind of thing, so we scrape the details only when we need it 
-      // but apparently heroku IP is blocked by LinkedIn so i don't want any scraping in this endpoint 
-      /*if (job.other_details == null) { 
+      if (job == null) return res.status(status.NOT_FOUND).json({error: 'Job not found!'})
+      // Initially i want to implement some "lazy load" kind of thing, so we scrape the details only when we need it
+      // but apparently heroku IP is blocked by LinkedIn so i don't want any scraping in this endpoint
+      /* if (job.other_details == null) {
         var url = urlBuilder.buildDetailUrl(job.job_id)
         request(url, function (err, resp, html) {
           if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
@@ -165,7 +164,7 @@ router.route('/jobs/:job_id')
   * @apiParam {String} company Company Name
   * @apiParam {String} logo Logo Image URI
   * @apiParam {String} location Job Location
-  * @apiParam {String} description Job description 
+  * @apiParam {String} description Job description
   * @apiParam {Object} other_details Job Details, it's an object you can insert any details you need
   * @apiSuccess {String} message message containing "Job Successfully Created!"
   * @apiSuccess {Object} job Job Object that just updated
@@ -177,7 +176,7 @@ router.route('/jobs/:job_id')
   *     HTTP/1.1 200 OK
   *     {
           "message": "Job Successfully Updated!",
-          "job": 
+          "job":
             {
               "__v": 0,
               "job_id": "Test100",
@@ -192,17 +191,16 @@ router.route('/jobs/:job_id')
         }
   */
   .put(function (req, res) {
-    Jobs.findOneAndUpdate({job_id: req.params.job_id},req.body,{new: true, $upsert: true},function (err, job) {
+    Jobs.findOneAndUpdate({job_id: req.params.job_id}, req.body, {new: true, $upsert: true}, function (err, job) {
       if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
-      res.json({message: 'Job Successfully Updaated!',job: job})
+      res.json({message: 'Job Successfully Updaated!', job: job})
     })
   })
   /**
   * @api {delete} api/jobs/:job_id Delete specific jobs
   * @apiName DeleteJob
   * @apiGroup Jobs
-  * 
-  * @apiSuccess {String} message 'Job Successfully Deleted!' 
+  * @apiSuccess {String} message 'Job Successfully Deleted!'
   * @apiSuccessExample Success-Response:
   *     HTTP/1.1 200 OK
   *     {"message": "Job Successfully deleted!"}
@@ -210,7 +208,7 @@ router.route('/jobs/:job_id')
   .delete(function (req, res) {
     Jobs.findOne({job_id: req.params.job_id}).remove(function (err, job) {
       if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
-      res.json({message: "Job Successfully deleted!"})
+      res.json({message: 'Job Successfully deleted!'})
     })
   })
 
@@ -234,12 +232,12 @@ router.get('/search', function (req, res) {
   if (req.query.q == null) return res.json({error: 'Search query is empty'})
   Jobs
     .find(
-      { $text : { $search : req.query.q }}, 
-      { score : { $meta: 'textScore' }})
-    .sort({ score : { $meta : 'textScore' } })
+      {$text: {$search: req.query.q}},
+      {score: {$meta: 'textScore'}})
+    .sort({score: {$meta: 'textScore'}})
     .limit(10)
     .select('job_id job_name company location')
-    .exec(function(err, jobs) {
+    .exec(function (err, jobs) {
       if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
       res.json({results: jobs})
     })

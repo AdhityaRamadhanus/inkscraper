@@ -5,7 +5,7 @@ var request = require('request')
 var status = require('http-status')
 var scraper = require('../module/scraper')
 var urlBuilder = require('../helper/linkedin-url')
-var async = require('async');
+var async = require('async')
 var router = express.Router()
 /* Load Model */
 var mongoose = require('mongoose')
@@ -59,19 +59,17 @@ router.get('/update', function (req, res) {
 
 router.get('/details', function (req, res) {
   Jobs.find({other_details: null}, 'job_id', function (err, jobs) {
-    //console.log(jobs.length)
     if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
     var processed = 0
     var jobQueue = async.queue(function (job, callback) {
       var url = urlBuilder.buildDetailUrl(job.job_id)
       request(url, function (err, resp, html) {
-        if (err) console.error('Scraping ' + task.job_id + ' got error ' + err.toString())
-        if (resp.statusCode === 404 || resp.statusCode === 500) console.error('Scraping ' + task.job_id + ' got error ' + resp.statusCode)
+        if (err) console.error('Scraping ' + job.job_id + ' got error ' + err.toString())
+        if (resp.statusCode === 404 || resp.statusCode === 500) console.error('Scraping ' + job.job_id + ' got error ' + resp.statusCode)
         var details = scraper.getJobDetails(html)
-        //console.log(details)
         job.other_details = details
-        job.save(function (err, job){
-          if (err) console.error('Updating ' + task.job_id + ' got error ' + err.toString())
+        job.save(function (err, job) {
+          if (err) console.error('Updating ' + job.job_id + ' got error ' + err.toString())
           processed++
           callback()
         })
@@ -82,7 +80,8 @@ router.get('/details', function (req, res) {
       res.send('Scraping Detail Done , ' + processed + ' Updated')
     }
     jobQueue.push(jobs, function (err) {
-      console.log('Finished Updating Job Details');
+      if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
+      console.log('Finished Updating Job Details')
     })
   })
 })

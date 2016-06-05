@@ -1,14 +1,17 @@
 'use strict'
+var describe = require('mocha').describe
+var it = require('mocha').it
+var after = require('mocha').after
 var should = require('should')
 var mongoose = require('mongoose')
 var Jobs = mongoose.model('Job')
 
 describe('Jobs Model', function () {
-  after(function() {
-   Jobs.remove({job_id: 'Test100'}, function (err) {
-    if (err) console.error(err)
-    console.log('Remove all dummy jobs created during test')
-   })
+  after(function () {
+    Jobs.remove({job_id: 'Test100'}, function (err) {
+      if (err) console.error(err)
+      console.log('Remove all dummy jobs created during test')
+    })
   })
   it('Should add job', function (done) {
     var job = {

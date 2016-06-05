@@ -1,9 +1,9 @@
 'use strict'
+var describe = require('mocha').describe
+var it = require('mocha').it
 require('should')
-require('assert')
 var server = require('../server')
 var supertest = require('supertest')
-
 
 describe('Jobs Endpoint', function () {
   it('Can add job', function (done) {
