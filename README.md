@@ -1,11 +1,13 @@
 # Linkedin-Scraper
+[![Build Status](https://travis-ci.org/AdhityaRamadhanus/Linkedin-Scraper.svg?branch=master)](https://travis-ci.org/AdhityaRamadhanus/Linkedin-Scraper)
 Linkedin Jobs Scraper using nodejs,expressjs and mongodb as storage
 
-TO-DO :
-1. CRUD jobs resource
-2. CRUD Unit Test
-3. Refine Schema
-4. Scraper
-5. Full-Text Search
-6. API Authentication
-7. API Documentation
+Features :
+* Scrap Listing Page
+* Scrap Details Page
+* Full-text search
+
+To-do :
+* Authentication
+* REST API Documentation
+
