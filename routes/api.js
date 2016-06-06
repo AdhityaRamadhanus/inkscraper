@@ -7,6 +7,7 @@ var scraper = require('../module/scraper')
 var urlBuilder = require('../helper/linkedin-url')*/
 /* Load Model */
 var mongoose = require('mongoose')
+mongoose.Promise = require('bluebird')
 var Jobs = mongoose.model('Job')
 
 // CRUD for Jobs
@@ -237,9 +238,12 @@ router.get('/search', function (req, res) {
     .sort({score: {$meta: 'textScore'}})
     .limit(10)
     .select('job_id job_name company location')
-    .exec(function (err, jobs) {
-      if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
-      res.json({results: jobs})
+    .exec()
+    .then(function (jobs) {
+      return res.json({results: jobs})
+    })
+    .catch(function (err) {
+      return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
     })
 })
 
