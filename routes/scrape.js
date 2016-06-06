@@ -10,7 +10,6 @@ var async = require('async')
 var router = express.Router()
 /* Load Model */
 var mongoose = require('mongoose')
-mongoose.Promise = require('bluebird')
 var Jobs = mongoose.model('Job')
 // Scraping Endpoint
 // Insert operation, every jobs (if any) will be inserted using bulk insert operation
