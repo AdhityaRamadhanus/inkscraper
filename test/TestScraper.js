@@ -25,8 +25,8 @@ describe('Scraper Function', function () {
     fs.readFile(path.join(__dirname, '/LinkedinTestDetail.html.test'), 'utf8', function (err, data) {
       if (err) throw err
       var specificJobs = scraper.getJobDetails(data)
-      specificJobs.listDate.should.equal('June 3, 2016')
-      specificJobs.expireDate.should.equal('July 3, 2016')
+      specificJobs.other_details.listDate.should.equal('June 3, 2016')
+      specificJobs.other_details.expireDate.should.equal('July 3, 2016')
       done()
     })
   })

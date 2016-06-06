@@ -7,7 +7,6 @@ var scraper = require('../module/scraper')
 var urlBuilder = require('../helper/linkedin-url')*/
 /* Load Model */
 var mongoose = require('mongoose')
-mongoose.Promise = require('bluebird')
 var Jobs = mongoose.model('Job')
 
 // CRUD for Jobs

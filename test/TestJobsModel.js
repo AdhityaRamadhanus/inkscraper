@@ -9,7 +9,7 @@ var Jobs = mongoose.model('Job')
 describe('Jobs Model', function () {
   after(function () {
     Jobs.remove({job_id: 'Test100'}, function (err) {
-      if (err) console.error(err)
+      //if (err) console.error(err)
       console.log('Remove all dummy jobs created during test')
     })
   })
@@ -23,6 +23,7 @@ describe('Jobs Model', function () {
       description: 'NodeJs Engineer'
     }
     Jobs(job).save(function (err, job) {
+      if (err) console.log('Valid Job cannot be saved')
       should.not.exist(err)
       done()
     })
@@ -37,6 +38,7 @@ describe('Jobs Model', function () {
       description: 'NodeJs Engineer'
     }
     Jobs(job).save(function (err, job) {
+      if (err) console.log('Duplicated Job cannot be saved')
       should.exist(err)
       done()
     })

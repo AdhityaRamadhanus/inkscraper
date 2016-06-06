@@ -2,6 +2,7 @@ var express = require('express')
 var app = express()
 
 var mongoose = require('mongoose')
+mongoose.Promise = require('bluebird')
 require('./db')(process.env.MONGOLAB_URI, mongoose)
 require('./models/Jobs')
 
