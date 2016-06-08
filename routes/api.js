@@ -73,10 +73,13 @@ router.route('/jobs')
   */
   .post(function (req, res) {
     // Keep it simple haha
-    Jobs(req.body).save(function (err, job) {
-      if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
-      res.status(201).json({message: 'Job Successfully Created!', job: job})
-    })
+    Jobs(req.body).save()
+      .then(function (job) {
+        return res.status(201).json({message: 'Job Successfully Created!', job: job})
+      })
+      .catch(function (err) {
+        return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
+      })
   })
   /**
   * @api {delete} api/jobs Delete all jobs
@@ -132,6 +135,7 @@ router.route('/jobs/:job_id')
     Jobs.findOne({job_id: req.params.job_id}, function (err, job) {
       if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
       if (job == null) return res.status(status.NOT_FOUND).json({error: 'Job not found!'})
+      res.json({job: job})
       // Initially i want to implement some "lazy load" kind of thing, so we scrape the details only when we need it
       // but apparently heroku IP is blocked by LinkedIn so i don't want any scraping in this endpoint
       /* if (job.other_details == null) {
@@ -152,7 +156,6 @@ router.route('/jobs/:job_id')
             res.json({job: job})
           }
         })*/
-      res.json({job: job})
     })
   })
   /**

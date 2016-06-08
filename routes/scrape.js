@@ -10,7 +10,6 @@ var async = require('async')
 var router = express.Router()
 /* Load Model */
 var mongoose = require('mongoose')
-mongoose.Promise = require('bluebird')
 var Jobs = mongoose.model('Job')
 // Scraping Endpoint
 // Insert operation, every jobs (if any) will be inserted using bulk insert operation
@@ -119,6 +118,7 @@ router.get('/details', function (req, res) {
       axios.all(axiosGets)
         .then(axios.spread(function () {
           var Responses = Array.prototype.slice.call(arguments)
+          var processed = 0
           Responses.forEach(function (response) {
             var specificJobs = scraper.getJobDetails(response.data)
             var query = {job_id: specificJobs.job_id}
@@ -126,13 +126,14 @@ router.get('/details', function (req, res) {
             var Promise = Jobs.findOneAndUpdate(query,update).exec()
             Promise
               .then(function () {
+                processed++
                 console.log('Done Updating Jobs Detals')
               })
               .catch(function (err) {
                 console.log(err)
               })
           })
-          return res.json({message: 'Scraping Detail Done',updated_jobs: Responses.length})
+          return res.json({message: 'Scraping Detail Done',updated_jobs: processed})
         }))
         .catch(function (response) {
           if (response instanceof Error) {
