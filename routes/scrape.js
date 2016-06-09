@@ -34,7 +34,7 @@ router.get('/insert', function (req, res) {
       var Promise = Jobs.insertMany(rawJobs)
       Promise
         .then(function (results) {
-          return res.json({message: 'Scrape Done', inserted_count: results.insertedCount})
+          return res.json({message: 'Scrape Done', inserted_count: results.length})
         })
         .catch(function (err) {
           return res.json({message: 'Write Operation Failed', error: err.errmsg})
@@ -63,7 +63,6 @@ router.get('/update', function (req, res) {
     .then(function (response) {
       var rawJobs = scraper.getJobs(response.data)
       if (rawJobs.length === 0) return res.json({message: 'Scraping Failed, Html not as expected'})
-      // var start = new Date()
       var processed = 0
       async.each(rawJobs, function (job, callback) {
         var query = {job_id: job.job_id}
@@ -87,8 +86,6 @@ router.get('/update', function (req, res) {
           })
       }, function (err) {
         if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
-        // var end = new Date() - start
-        // console.log("Execution Time : " + end)
         return res.json({message: 'Scrape Done', upserted_count: rawJobs.length})
       })
     })
@@ -136,7 +133,7 @@ router.get('/details', function (req, res) {
         .then(axios.spread(function () {
           var Responses = Array.prototype.slice.call(arguments)
           var processed = 0
-          Responses.forEach(function (response) {
+          async.each(Responses, function (response, callback) {
             var specificJobs = scraper.getJobDetails(response.data)
             if (specificJobs != null) {
               var query = {job_id: specificJobs.job_id}
@@ -145,14 +142,17 @@ router.get('/details', function (req, res) {
               Promise
                 .then(function () {
                   processed++
-                  console.log('Finished Insert Job ' + specificJobs.job_id + ' processed ' + processed)
+                  console.log('Finished Detail Job ' + specificJobs.job_id + ' processed ' + processed)
+                  callback()
                 })
                 .catch(function (err) {
                   console.log(err)
                 })
             }
+          }, function (err) {
+            if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
+            res.json({message: 'Scraping Detail Done', updated_jobs: Responses.length})
           })
-          return res.json({message: 'Scraping Detail Done', updated_jobs: Responses.length})
         }))
         .catch(function (response) {
           if (response instanceof Error) {
