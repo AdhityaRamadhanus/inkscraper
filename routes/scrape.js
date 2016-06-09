@@ -63,7 +63,9 @@ router.get('/update', function (req, res) {
     .then(function (response) {
       var rawJobs = scraper.getJobs(response.data)
       if (rawJobs.length === 0) return res.json({message: 'Scraping Failed, Html not as expected'})
-      var jobQueue = async.queue(function (job, callback) {
+      // var start = new Date()
+      var processed = 0
+      async.each(rawJobs, function (job, callback) {
         var query = {job_id: job.job_id}
         var update = {$set: {
           'job_name': job.job_name,
@@ -76,18 +78,18 @@ router.get('/update', function (req, res) {
         var Promise = Jobs.findOneAndUpdate(query, update, options).exec()
         Promise
           .then(function () {
+            processed++
+            console.log('Finished Insert Job ' + job.job_id + ' processed ' + processed)
             callback()
           })
           .catch(function (err) {
             console.log(err)
           })
-      })
-      jobQueue.drain = function () {
-        return res.json({message: 'Scrape Done', upserted_count: rawJobs.length})
-      }
-      jobQueue.push(rawJobs, function (err) {
+      }, function (err) {
         if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
-        console.log('Finished Insert Job')
+        // var end = new Date() - start
+        // console.log("Execution Time : " + end)
+        return res.json({message: 'Scrape Done', upserted_count: rawJobs.length})
       })
     })
     .catch(function (response) {
@@ -133,6 +135,7 @@ router.get('/details', function (req, res) {
       axios.all(axiosGets)
         .then(axios.spread(function () {
           var Responses = Array.prototype.slice.call(arguments)
+          var processed = 0
           Responses.forEach(function (response) {
             var specificJobs = scraper.getJobDetails(response.data)
             if (specificJobs != null) {
@@ -141,7 +144,8 @@ router.get('/details', function (req, res) {
               var Promise = Jobs.findOneAndUpdate(query, update).exec()
               Promise
                 .then(function () {
-                  console.log('Done Updating Jobs Detals')
+                  processed++
+                  console.log('Finished Insert Job ' + specificJobs.job_id + ' processed ' + processed)
                 })
                 .catch(function (err) {
                   console.log(err)
