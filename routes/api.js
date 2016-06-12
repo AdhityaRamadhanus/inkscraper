@@ -2,6 +2,8 @@
 var express = require('express')
 var router = express.Router()
 var status = require('http-status')
+var apicache = require('apicache')
+var cache = apicache.options({debug: true}).middleware
 /* var request = require('request')
 var scraper = require('../module/scraper')
 var urlBuilder = require('../helper/linkedin-url')*/
@@ -26,7 +28,8 @@ router.route('/jobs')
           "location":"Deerfield Beach, Florida"}
         ]}
   */
-  .get(function (req, res) {
+  .get(cache('10 minutes'), function (req, res) {
+    req.apicacheGroup = 'JobList'
     Jobs.find({}, 'job_id job_name company location', function (err, jobs) {
       if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
       res.json({results: jobs})
@@ -75,6 +78,8 @@ router.route('/jobs')
     // Keep it simple haha
     Jobs(req.body).save()
       .then(function (job) {
+        // Basically just trying to invalidate the cache
+        apicache.clear('JobList')
         return res.status(201).json({message: 'Job Successfully Created!', job: job})
       })
       .catch(function (err) {
@@ -93,6 +98,8 @@ router.route('/jobs')
   .delete(function (req, res) {
     Jobs.remove({}, function (err) {
       if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
+      // Basically just trying to invalidate the cache
+      apicache.clear('JobList')
       res.status(201).json({message: 'All Job Successfully Deleted!'})
     })
   })
@@ -131,10 +138,10 @@ router.route('/jobs/:job_id')
         }
       }
   */
-  .get(function (req, res) {
+  .get(cache('10 minutes'), function (req, res) {
     Jobs.findOne({job_id: req.params.job_id}, function (err, job) {
       if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
-      if (job == null) return res.status(status.NOT_FOUND).json({error: 'Job not found!'})
+      if (!job) return res.status(status.NOT_FOUND).json({error: 'Job not found!'})
       res.json({job: job})
       // Initially i want to implement some "lazy load" kind of thing, so we scrape the details only when we need it
       // but apparently heroku IP is blocked by LinkedIn so i don't want any scraping in this endpoint
