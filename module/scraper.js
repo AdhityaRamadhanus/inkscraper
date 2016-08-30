@@ -1,45 +1,28 @@
 // Standart Test :PASSED
-var cheerio = require('cheerio')
-var scrap = scrap || {}
+const cheerio = require('cheerio')
+const scrap = scrap || {}
+const _ = require('lodash')
 // It's advised to use promised style when calling these scraper
 // so every error in here will be caught rather than creating handle for every error
 scrap.getJobs = function (html) {
-  var $ = cheerio.load(html)
-  function HtmlToJson (elmt) {
-    /* Rebind $ */
-    $ = cheerio.load(elmt)
-    /* Get the Job Id using regex */
-    var url = $('meta[itemprop=url]').attr('content')
-    var re = /jobs\/view\/([0-9]+).*/
-    var m
-    /* m[0] is full string e.g /job/view/666 and m[1] is the id e.g 666*/
-    if ((m = re.exec(url)) !== null) {
-      if (m.index === re.lastIndex) {
-        re.lastIndex++
-      }
-    }
-    var id = m[1]
-    var location = $('.job-details .job-location-posted-time .job-location').text()
-    var logo = $('.company-logo-link img').attr('data-delayed-url')
-    var jobName = $('.job-details .job-title-line .job-title .job-title-link .job-title-text').text()
-    var company = $('.job-details .company-name-line .company-name .company-name-link').text()
-    var description = $('.job-details .job-description').text()
-
-    var job = {job_id: id,
-              job_name: jobName,
-              company: company,
-              logo: logo,
-              location: location,
-              description: description}
-    return job
-  }
-  return $('.search-results .job-listing').toArray().map(HtmlToJson)
+  const $ = cheerio.load(html)
+  var rawJobs = $('code[id=decoratedJobPostingsModule]').contents()
+  var jobsObj = JSON.parse(_.result(rawJobs[0], 'data'))
+  var jobsMapped = _.map(_.result(jobsObj, 'elements'), (job) => ({
+    job_id: job.decoratedJobPosting.jobPosting.id,
+    job_name: job.decoratedJobPosting.jobPosting.title,
+    company: job.decoratedJobPosting.companyName,
+    logo: (!_.isNil(job.decoratedJobPosting.decoratedCompany.companyLogo)) ? job.decoratedJobPosting.decoratedCompany.companyLogo.urn : 'default',
+    location: job.decoratedJobPosting.formattedLocation,
+    description: job.decoratedJobPosting.formattedDescription
+  }))
+  return jobsMapped
 }
 // It's advised to use promised style when calling these scraper
 // so every error in here will be caught rather than creating handle for every error
 scrap.getJobDetails = function (html) {
   // 'Client-Side Rendering' Scraping , apparently the json string is present as html comment
-  var $ = cheerio.load(html)
+  const $ = cheerio.load(html)
   var url = $('meta[property="og:url"]').attr('content')
   var re = /jobs\/view\/([0-9]+).*/
   var m
@@ -53,7 +36,7 @@ scrap.getJobDetails = function (html) {
   // get the json string
   var rawJobDetails = $('code[id=decoratedJobPostingModule]').contents()
   // parse json string
-  var jobDetails = JSON.parse(rawJobDetails[0].data)
+  var jobDetails = JSON.parse(_.result(rawJobDetails[0], 'data'))
   var ret = {
     job_id: id,
     other_details: {

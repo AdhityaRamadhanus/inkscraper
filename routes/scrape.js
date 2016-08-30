@@ -28,19 +28,15 @@ router.get('/insert', function (req, res) {
     headers: {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36'}
   }
   axios.get(url, config)
-    .then(function (response) {
+    .then((response) => {
       var rawJobs = scraper.getJobs(response.data)
       if (rawJobs.length === 0) return res.json({message: 'Scraping Failed, Html not as expected'})
-      var Promise = Jobs.insertMany(rawJobs)
-      Promise
-        .then(function (results) {
-          return res.json({message: 'Scrape Done', inserted_count: results.length})
-        })
-        .catch(function (err) {
-          return res.json({message: 'Write Operation Failed', error: err.errmsg})
-        })
+      return Jobs.insertMany(rawJobs) // Promise
     })
-    .catch(function (response) {
+    .then((results) => {
+      res.json({message: 'Scrape Done', inserted_count: results.length})
+    })
+    .catch((response) => {
       if (response instanceof Error) {
         // Something happened in setting up the request that triggered an Error
         return res.json({error: response.message})
@@ -60,7 +56,7 @@ router.get('/update', function (req, res) {
     headers: {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36'}
   }
   axios.get(url, config)
-    .then(function (response) {
+    .then((response) => {
       var rawJobs = scraper.getJobs(response.data)
       if (rawJobs.length === 0) return res.json({message: 'Scraping Failed, Html not as expected'})
       var processed = 0
@@ -117,8 +113,8 @@ router.get('/details', function (req, res) {
   var Promise = Jobs.find({other_details: null}, 'job_id').exec()
   Promise
     // Build an array of axios get request
-    .then(function (jobs) {
-      var axiosGets = jobs.map(function (job) {
+    .then((jobs) => {
+      var axiosGets = jobs.map((job) => {
         var url = urlBuilder.buildDetailUrl(job.job_id)
         var config = {
           headers: {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36'}
@@ -128,7 +124,7 @@ router.get('/details', function (req, res) {
       return axiosGets
     })
     // Execute the axios get request and scrape every one of them
-    .then(function (axiosGets) {
+    .then((axiosGets) => {
       axios.all(axiosGets)
         .then(axios.spread(function () {
           var Responses = Array.prototype.slice.call(arguments)
