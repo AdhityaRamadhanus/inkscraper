@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node server.js",
+    "start": "nodemon server.js",
     "test": "node_modules/.bin/mocha --timeout=15000"
   },
   "dependencies": {
@@ -18,8 +18,10 @@
     "express": "~4.13.1",
     "http-status": "^0.2.2",
     "jade": "~1.11.0",
+    "lodash": "^4.15.0",
     "mongoose": "^4.4.17",
     "morgan": "~1.6.1",
+    "nodemon": "^1.10.2",
     "request": "^2.72.0",
     "serve-favicon": "~2.3.0"
   },
