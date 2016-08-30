@@ -2,6 +2,10 @@ before_script:
   - sleep 15
   - mongo mydb_test --eval 'db.addUser("travis", "test");'
 language: node_js
+node_js:
+  - "6.x"
+  - "5.x"
+  - "4.x"
 env:
   - NODE_ENV=development
 services:
