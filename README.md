@@ -4,7 +4,7 @@
 <p>
   <a href="#installation">Installation</a> |
   <a href="#documentation">Documentation</a> |
-  <a href="#features">Features</a>
+  <a href="#features">Features</a> |
   <a href="#licenses">License</a>
   <br><br>
   <blockquote>
@@ -14,13 +14,13 @@
 
 Installation
 ------------
-
+`
 * git clone https://github.com/AdhityaRamadhanus/Linkedin-Scraper.git
 * cd Linkedin-Scraper
 * npm install
 * npm start
 * set .env files (i'm using dotenv, see here https://www.npmjs.com/package/dotenv for documentation), you only need to set MONGOLAB_URI in .env
-
+`
 Documentation
 ------------
 
