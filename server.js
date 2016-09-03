@@ -3,6 +3,10 @@ const app = express()
 
 const mongoose = require('mongoose')
 mongoose.Promise = require('bluebird')
+
+GLOBAL._ = require('lodash')
+
+require('dotenv').config()
 require('./db')(process.env.MONGOLAB_URI, mongoose)
 require('./models/Jobs')
 

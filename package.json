@@ -15,10 +15,12 @@
     "body-parser": "~1.13.2",
     "cheerio": "^0.20.0",
     "debug": "~2.2.0",
+    "dotenv": "^2.0.0",
     "express": "~4.13.1",
     "http-status": "^0.2.2",
     "lodash": "^4.15.0",
     "mongoose": "^4.4.17",
+    "mongoose-timestamp": "^0.6.0",
     "morgan": "~1.6.1",
     "nodemon": "^1.10.2",
     "request": "^2.72.0"

@@ -1,6 +1,6 @@
 // Standard Test : PASSED
-var mongoose = require('mongoose')
-var Schema = mongoose.Schema
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 // Job Schema
 var JobSchema = Schema({
   // not ObjectId MongoDB
@@ -11,9 +11,14 @@ var JobSchema = Schema({
   logo: {type: String},
   location: {type: String},
   description: {type: String},
-  other_details: Schema.Types.Mixed
+  other_details: Schema.Types.Mixed,
+  is_detail: {
+    type: Boolean,
+    default: false
+  }
 })
 
+JobSchema.plugin(require('mongoose-timestamp'))
 JobSchema.index({
   job_id: 'text',
   job_name: 'text',
