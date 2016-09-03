@@ -44,7 +44,7 @@ describe('Jobs Endpoint', function () {
       job_name: 'Software Engineer Test'
     }
     supertest(server)
-      .put('/api/jobs/Test100')
+      .post('/api/jobs/Test100')
       .send(job)
       .end(function (err, res) {
         if (err) {

@@ -38,5 +38,12 @@
       "title": "Linkedin Scraper REST API Documentation",
       "url": "https://github.com/AdhityaRamadhanus/Linkedin-Scraper"
     }
+  },
+  "check": "standard",
+  "precommit": "check",
+  "standard": {
+    "ignore": [
+      "/test/*.js",
+    ]
   }
 }

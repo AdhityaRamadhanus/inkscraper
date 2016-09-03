@@ -1,7 +1,7 @@
-var express = require('express')
-var app = express()
+const express = require('express')
+const app = express()
 
-var mongoose = require('mongoose')
+const mongoose = require('mongoose')
 mongoose.Promise = require('bluebird')
 require('./db')(process.env.MONGOLAB_URI, mongoose)
 require('./models/Jobs')
