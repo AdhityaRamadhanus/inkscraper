@@ -3,9 +3,6 @@ const express = require('express')
 const router = express.Router()
 const apicache = require('apicache')
 const cache = apicache.options({debug: true}).middleware
-/* Load Model */
-const mongoose = require('mongoose')
-const Jobs = mongoose.model('Job')
 /* Load Handler */
 const apiHandlers = require('../handlers/api')
 // CRUD for Jobs
@@ -65,7 +62,8 @@ router.get('/jobs', cache('10 minutes'), apiHandlers.getAllJobs)
             }
         }
   */
-router.post('/jobs', (req, res, next) => {
+router.post('/jobs',
+  (req, res, next) => {
     apicache.clear('JobList')
     next()
   },
@@ -79,7 +77,8 @@ router.post('/jobs', (req, res, next) => {
   *     HTTP/1.1 200 OK
   *     {"message": "All Job Successfully Deleted!"}
   */
-router.delete('/jobs', (req, res, next) => {
+router.delete('/jobs',
+  (req, res, next) => {
     apicache.clear('JobList')
     next()
   },
@@ -118,7 +117,6 @@ router.delete('/jobs', (req, res, next) => {
       }
   */
 router.get('/jobs/:job_id', cache('10 minutes'), apiHandlers.getJob)
- 
   /**
   * @api {put} api/jobs/:job_id Modify a job
   * @apiName PutJobs

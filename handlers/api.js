@@ -34,8 +34,8 @@ module.exports.getJob = (req, res, next) => {
 }
 
 module.exports.updateJob = (req, res, next) => {
-  Jobs.findOneAndUpdate({job_id: req.params.job_id}, req.body, 
-    {new: true, $upsert: true}, 
+  Jobs.findOneAndUpdate({job_id: req.params.job_id}, req.body,
+    {new: true, $upsert: true},
     (err, job) => {
       if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
       res.json({message: 'Job Successfully Updaated!', job: job})

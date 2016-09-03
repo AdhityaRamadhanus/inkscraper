@@ -26,7 +26,7 @@ scrap.getJobDetails = function (html) {
   var url = $('meta[property="og:url"]').attr('content')
   var re = /jobs\/view\/([0-9]+).*/
   var m
-  /* m[0] is full string e.g /job/view/666 and m[1] is the id e.g 666*/
+  /* m[0] is full string e.g /job/view/666 and m[1] is the id e.g 666 */
   if ((m = re.exec(url)) !== null) {
     if (m.index === re.lastIndex) {
       re.lastIndex++

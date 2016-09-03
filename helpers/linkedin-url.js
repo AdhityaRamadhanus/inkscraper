@@ -1,2 +1,4 @@
 var linkedinurl = 'https://www.linkedin.com/jobs/view/'
-module.exports.buildDetailUrl = function (jobId) {	return	linkedinurl + jobId }
+module.exports.buildDetailUrl = (jobId) => {
+  return linkedinurl + jobId
+}

@@ -16,5 +16,4 @@ module.exports.loadRoute = (dirName, app) => {
     })
     console.log('Finish Load')
   })
-
-} 
+}
