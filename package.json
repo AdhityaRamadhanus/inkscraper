@@ -42,6 +42,9 @@
   },
   "pre-commit": "check",
   "standard": {
+    "globals" : [
+      "_"
+    ],
     "ignore": [
       "/test/*.js"
     ]

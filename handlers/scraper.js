@@ -115,14 +115,13 @@ module.exports.getJobDetails = (req, res, next) => {
               var update = {$set: {'other_details': specificJobs.other_details}}
               Jobs
                 .findOneAndUpdate(query, update)
-                .exec((err) => {
+                .exec((err, job) => {
                   processed++
                   console.log('Finished Insert Job ' + job.job_id + ' processed ' + processed)
                   if (err) callback(err)
                   else callback()
                 })
-            }
-            else{
+            } else {
               callback(new Error('Failed to Scrape Details'))
             }
           }, function (err) {

@@ -3,9 +3,6 @@ const express = require('express')
 const scraperHandlers = require('../handlers/scraper')
 const router = express.Router()
 
-/* Load Model */
-const mongoose = require('mongoose')
-const Jobs = mongoose.model('Job')
 // Scraping Endpoint
 // Insert operation, every jobs (if any) will be inserted using bulk insert operation
 /**
