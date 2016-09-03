@@ -1,18 +1,15 @@
 /* node module dependencies */
-var express = require('express')
-var router = express.Router()
-var status = require('http-status')
-var apicache = require('apicache')
-var cache = apicache.options({debug: true}).middleware
-/* var request = require('request')
-var scraper = require('../module/scraper')
-var urlBuilder = require('../helper/linkedin-url')*/
+const express = require('express')
+const router = express.Router()
+const apicache = require('apicache')
+const cache = apicache.options({debug: true}).middleware
 /* Load Model */
-var mongoose = require('mongoose')
-var Jobs = mongoose.model('Job')
-
+const mongoose = require('mongoose')
+const Jobs = mongoose.model('Job')
+/* Load Handler */
+const apiHandlers = require('../handlers/api')
 // CRUD for Jobs
-router.route('/jobs')
+
   /**
   * @api {get} api/jobs Request all jobs
   * @apiName GetJobs
@@ -28,13 +25,7 @@ router.route('/jobs')
           "location":"Deerfield Beach, Florida"}
         ]}
   */
-  .get(cache('10 minutes'), function (req, res) {
-    req.apicacheGroup = 'JobList'
-    Jobs.find({}, 'job_id job_name company location', function (err, jobs) {
-      if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
-      res.json({results: jobs})
-    })
-  })
+router.get('/jobs', cache('10 minutes'), apiHandlers.getAllJobs)
   /**
   * @api {post} api/jobs Create new Job
   * @apiName PostJobs
@@ -74,18 +65,11 @@ router.route('/jobs')
             }
         }
   */
-  .post(function (req, res) {
-    // Keep it simple haha
-    Jobs(req.body).save()
-      .then(function (job) {
-        // Basically just trying to invalidate the cache
-        apicache.clear('JobList')
-        return res.status(201).json({message: 'Job Successfully Created!', job: job})
-      })
-      .catch(function (err) {
-        return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
-      })
-  })
+router.post('/jobs', (req, res, next) => {
+    apicache.clear('JobList')
+    next()
+  },
+  apiHandlers.postJob)
   /**
   * @api {delete} api/jobs Delete all jobs
   * @apiName DeleteJobs
@@ -95,16 +79,11 @@ router.route('/jobs')
   *     HTTP/1.1 200 OK
   *     {"message": "All Job Successfully Deleted!"}
   */
-  .delete(function (req, res) {
-    Jobs.remove({}, function (err) {
-      if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
-      // Basically just trying to invalidate the cache
-      apicache.clear('JobList')
-      res.status(201).json({message: 'All Job Successfully Deleted!'})
-    })
-  })
-
-router.route('/jobs/:job_id')
+router.delete('/jobs', (req, res, next) => {
+    apicache.clear('JobList')
+    next()
+  },
+  apiHandlers.deleteJobs)
   /**
   * @api {get} api/jobs/:job_id Request specific job information
   * @apiName GetJob
@@ -138,33 +117,8 @@ router.route('/jobs/:job_id')
         }
       }
   */
-  .get(cache('10 minutes'), function (req, res) {
-    Jobs.findOne({job_id: req.params.job_id}, function (err, job) {
-      if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
-      if (!job) return res.status(status.NOT_FOUND).json({error: 'Job not found!'})
-      res.json({job: job})
-      // Initially i want to implement some "lazy load" kind of thing, so we scrape the details only when we need it
-      // but apparently heroku IP is blocked by LinkedIn so i don't want any scraping in this endpoint
-      /* if (job.other_details == null) {
-        var url = urlBuilder.buildDetailUrl(job.job_id)
-        request(url, function (err, resp, html) {
-          if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
-          if (resp.statusCode === 404 || resp.statusCode === 500) return res.status(resp.statusCode).send('Error ' + resp.statusCode)
-          var details = scraper.getJobDetails(html)
-          console.log(details)
-          job.other_details = details
-          job.save(function (err, job){
-            if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
-                res.json({job: job})
-              })
-            })
-          }
-        else{
-            res.json({job: job})
-          }
-        })*/
-    })
-  })
+router.get('/jobs/:job_id', cache('10 minutes'), apiHandlers.getJob)
+ 
   /**
   * @api {put} api/jobs/:job_id Modify a job
   * @apiName PutJobs
@@ -200,12 +154,7 @@ router.route('/jobs/:job_id')
             }
         }
   */
-  .put(function (req, res) {
-    Jobs.findOneAndUpdate({job_id: req.params.job_id}, req.body, {new: true, $upsert: true}, function (err, job) {
-      if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
-      res.json({message: 'Job Successfully Updaated!', job: job})
-    })
-  })
+router.post('/jobs/:job_id', apiHandlers.updateJob)
   /**
   * @api {delete} api/jobs/:job_id Delete specific jobs
   * @apiName DeleteJob
@@ -215,12 +164,7 @@ router.route('/jobs/:job_id')
   *     HTTP/1.1 200 OK
   *     {"message": "Job Successfully deleted!"}
   */
-  .delete(function (req, res) {
-    Jobs.findOne({job_id: req.params.job_id}).remove(function (err, job) {
-      if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
-      res.json({message: 'Job Successfully deleted!'})
-    })
-  })
+router.delete('/jobs/:job_id', apiHandlers.deleteJob)
 
 /**
 * @api {get} api/search?q=<search keywords> Request all jobs
@@ -238,22 +182,6 @@ router.route('/jobs/:job_id')
         ]
       }
 */
-router.get('/search', function (req, res) {
-  if (req.query.q == null) return res.json({error: 'Search query is empty'})
-  Jobs
-    .find(
-      {$text: {$search: req.query.q}},
-      {score: {$meta: 'textScore'}})
-    .sort({score: {$meta: 'textScore'}})
-    .limit(10)
-    .select('job_id job_name company location')
-    .exec()
-    .then(function (jobs) {
-      return res.json({results: jobs})
-    })
-    .catch(function (err) {
-      return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
-    })
-})
+router.get('/search', apiHandlers.searchJobs)
 
 module.exports = router
