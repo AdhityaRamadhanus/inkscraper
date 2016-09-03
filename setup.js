@@ -15,6 +15,8 @@ module.exports = (app, express) => {
   app.use(bodyParser.urlencoded({ extended: false }))
 
   // App Routes
-  // app.use('/', express.static(path.join(__dirname, '/apidoc')))
+  if (process.env.APIDOC === 'true'){
+    app.use('/apidoc', express.static(path.join(__dirname, '/apidoc')))
+  }
   loader(path.join(__dirname, 'routes'), app)
 }

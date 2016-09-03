@@ -5,7 +5,8 @@
   "scripts": {
     "start": "nodemon server.js",
     "test": "node_modules/.bin/mocha --timeout=15000",
-    "check": "standard"
+    "check": "standard",
+    "gen-doc": "apidoc -i routes/ -o apidoc"
   },
   "dependencies": {
     "apicache": "0.0.14",
@@ -42,7 +43,7 @@
   },
   "pre-commit": "check",
   "standard": {
-    "globals" : [
+    "globals": [
       "_"
     ],
     "ignore": [
