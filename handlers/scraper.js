@@ -107,7 +107,6 @@ module.exports.getJobDetails = (req, res, next) => {
         .then(axios.spread(() => {
           var Responses = Array.prototype.slice.call(arguments)
           var processed = 0
-          console.log(Responses.length)
           async.each(Responses, function (response, callback) {
             var specificJobs = scraper.getJobDetails(response.data)
             if (specificJobs != null) {
@@ -132,7 +131,6 @@ module.exports.getJobDetails = (req, res, next) => {
         .catch((response) => {
           if (response instanceof Error) {
             // Something happened in setting up the request that triggered an Error
-            console.log('anjay')
             return res.json({error: response.message})
           } else {
             // The request was made, but the server responded with a status code
