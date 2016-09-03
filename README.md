@@ -14,7 +14,7 @@ How to generate documentation :
 * cd Linkedin-Scraper
 * npm run gen-doc
 * add APIDOC=true in .env
-* enjoy, documentation can be found in "/"
+* enjoy, documentation can be found in "/apidoc"
 
 Features :
 * Scrap Listing Page (Job listing, by default this will scrape https://www.linkedin.com/jobs/view-all)
