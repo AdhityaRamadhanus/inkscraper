@@ -43,7 +43,7 @@
   },
   "pre-commit": "check",
   "standard": {
-    "globals": [
+    "globals" : [
       "_"
     ],
     "ignore": [
