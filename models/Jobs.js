@@ -15,6 +15,9 @@ var JobSchema = Schema({
   is_detail: {
     type: Boolean,
     default: false
+  },
+  detail_url: {
+    type: String, required: true
   }
 })
 

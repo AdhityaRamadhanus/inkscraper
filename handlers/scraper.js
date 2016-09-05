@@ -5,7 +5,6 @@ const Jobs = mongoose.model('Job')
 const status = require('http-status')
 const axios = require('axios')
 const scraper = require('../libs/scraper')
-const urlBuilder = require('../helpers/linkedin-url')
 const async = require('async')
 
 module.exports.insertJobs = (req, res, next) => {
@@ -54,7 +53,8 @@ module.exports.updateJobs = (req, res, next) => {
             'company': job.company,
             'logo': job.logo,
             'location': job.location,
-            'description': job.description
+            'description': job.description,
+            'detail_url': job.detail_url
           }
         }
         var options = {upsert: true}
@@ -90,7 +90,7 @@ module.exports.getJobDetails = (req, res, next) => {
   async.waterfall([
     (callback) => {
       Jobs
-        .find({is_detail: false}, 'job_id')
+        .find({is_detail: false}, 'job_id detail_url')
         .exec((err, jobs) => {
           callback(err, jobs)
         })
@@ -98,7 +98,7 @@ module.exports.getJobDetails = (req, res, next) => {
     (jobs, callback) => {
       var processed = 0
       async.each(jobs, (job, cb) => {
-        var url = urlBuilder.buildDetailUrl(job.job_id)
+        var url = job.detail_url
         console.log('Scraping ' + url)
         var config = {
           headers: {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36'}
