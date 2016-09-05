@@ -20,7 +20,7 @@ Installation
 * npm install
 * npm start
 * set .env files (i'm using dotenv, see here https://www.npmjs.com/package/dotenv for documentation)
-Example of .env 
+* Example of .env 
 ```js
 NODE_ENV=development
 
@@ -32,8 +32,10 @@ APIDOC=true
 Usage
 ------------
 * Hit /scraper/insert to bulk insert jobs (this is faster than upsert (below) but if there's existing jobs it will fail)
-* If you want to scrape list of jobs from other url (not the default you provide) you can use querystring url, example
-`http://localhost:3000/scraper/insert?url=https%3A%2F%2Fuk.linkedin.com%2Fjobs%2Fsearch%3Fstart%3D0%26count%3D25`
+* If you want to scrape list of jobs from other url (not the default you provide) you can use querystring url, example (you need to encode the url first if there's querystring in it)
+```js
+http://localhost:3000/scraper/insert?url=https%3A%2F%2Fuk.linkedin.com%2Fjobs%2Fsearch%3Fstart%3D0%26count%3D25
+```
 * Hit /scraper/update to upsert jobs
 * Hit /scraper/details to get details of every job you have scraped 
 * You can see the jobs in /api/jobs or /api/jobs/:jobid 
