@@ -89,8 +89,8 @@ module.exports.updateJobs = (req, res, next) => {
 module.exports.getJobDetails = (req, res, next) => {
   async.waterfall([
     (callback) => {
-      Jobs.
-        find({is_detail: false}, 'job_id')
+      Jobs
+        .find({is_detail: false}, 'job_id')
         .exec((err, jobs) => {
           callback(err, jobs)
         })
@@ -106,8 +106,7 @@ module.exports.getJobDetails = (req, res, next) => {
         axios
           .get(url, config)
           .then((response) => {
-            // var specificJobs = scraper.getJobDetails(response.data)
-            var specificJobs = null
+            var specificJobs = scraper.getJobDetails(response.data)
             if (specificJobs != null) {
               var query = {job_id: specificJobs.job_id}
               var update = {$set: {'other_details': specificJobs.other_details, 'is_detail': true}}
@@ -123,7 +122,8 @@ module.exports.getJobDetails = (req, res, next) => {
             }
           })
       }, (err) => callback(err, jobs.length))
-    }], (err, results) => {
+    }],
+    (err, results) => {
       if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({error: err.toString()})
       res.json({message: 'Scraping Detail Done', updated_jobs: results})
     })
