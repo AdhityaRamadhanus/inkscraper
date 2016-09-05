@@ -13,7 +13,8 @@ describe('Jobs Endpoint', function () {
       company: 'UrbanHire',
       logo: 'mylogo',
       location: 'Jakarta',
-      description: 'NodeJs Engineer'
+      description: 'NodeJs Engineer',
+      detail_url: 'test'
     }
     supertest(server)
       .post('/api/jobs')

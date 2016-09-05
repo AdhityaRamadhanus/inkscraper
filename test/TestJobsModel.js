@@ -20,7 +20,8 @@ describe('Jobs Model', function () {
       company: 'UrbanHire',
       logo: 'mylogo',
       location: 'Jakarta',
-      description: 'NodeJs Engineer'
+      description: 'NodeJs Engineer',
+      detail_url: 'test'
     }
     Jobs(job).save(function (err, job) {
       if (err) console.log('Valid Job cannot be saved')
@@ -35,7 +36,8 @@ describe('Jobs Model', function () {
       company: 'UrbanHire',
       logo: 'mylogo',
       location: 'Jakarta',
-      description: 'NodeJs Engineer'
+      description: 'NodeJs Engineer',
+      detail_url: 'test'
     }
     Jobs(job).save(function (err, job) {
       if (err) console.log('Duplicated Job cannot be saved')
