@@ -19,7 +19,23 @@ Installation
 * cd Linkedin-Scraper
 * npm install
 * npm start
-* set .env files (i'm using dotenv, see here https://www.npmjs.com/package/dotenv for documentation), you only need to set MONGOLAB_URI in .env
+* set .env files (i'm using dotenv, see here https://www.npmjs.com/package/dotenv for documentation)
+Example of .env 
+```js
+NODE_ENV=development
+
+MONGOLAB_URI='mongodb://localhost:27017/linkedin-scraper'
+DEFAULT_LINKEDIN_LIST_URL='https://uk.linkedin.com/jobs/search?start=0&count=25' 
+DEFAULT_LINKEDIN_DETAIL_URL='https://uk.linkedin.com/jobs/view/'
+APIDOC=true
+```
+
+Usage
+------------
+* Hit /scraper/insert to bulk insert jobs (this is faster than upsert (below) but if there's existing jobs it will fail)
+* Hit /scraper/update to upsert jobs
+* Hit /scraper/details to get details of every job you have scraped 
+* You can see the jobs in /api/jobs or /api/jobs/:jobid 
 
 Documentation
 ------------

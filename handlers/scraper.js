@@ -9,7 +9,7 @@ const urlBuilder = require('../helpers/linkedin-url')
 const async = require('async')
 
 module.exports.insertJobs = (req, res, next) => {
-  var url = req.query.url || 'http://www.linkedin.com/jobs/view-all'
+  var url = req.query.url || process.env.DEFAULT_LINKEDIN_LIST_URL
   var config = {
     headers: {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36'}
   }
