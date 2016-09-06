@@ -7,15 +7,18 @@ scrap.getJobs = (html) => {
   const $ = cheerio.load(html)
   var rawJobs = $('code[id=decoratedJobPostingsModule]').contents()
   var jobsObj = JSON.parse(_.result(rawJobs[0], 'data'))
-  var jobsMapped = _.map(_.result(jobsObj, 'elements'), (job) => ({
-    job_id: job.decoratedJobPosting.jobPosting.id,
-    job_name: job.decoratedJobPosting.jobPosting.title,
-    company: job.decoratedJobPosting.companyName,
-    logo: (!_.isNil(job.decoratedJobPosting.decoratedCompany.companyLogo)) ? job.decoratedJobPosting.decoratedCompany.companyLogo.urn : 'default',
-    location: job.decoratedJobPosting.formattedLocation,
-    description: job.decoratedJobPosting.formattedDescription,
-    detail_url: job.viewJobTextUrl.split('?')[0]
-  }))
+
+  var jobsMapped = _.map(_.result(jobsObj, 'elements'), (job) => {
+    return {
+      job_id: job.decoratedJobPosting.jobPosting.id,
+      job_name: job.decoratedJobPosting.jobPosting.title,
+      company: job.decoratedJobPosting.companyName,
+      logo: (!_.isNil(job.decoratedJobPosting.decoratedCompany)) ? job.decoratedJobPosting.decoratedCompany.companyLogo.urn : 'default',
+      location: job.decoratedJobPosting.formattedLocation,
+      description: job.decoratedJobPosting.formattedDescription,
+      detail_url: job.viewJobTextUrl.split('?')[0]
+    }
+  })
   return jobsMapped
 }
 
