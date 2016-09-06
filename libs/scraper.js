@@ -13,7 +13,7 @@ scrap.getJobs = (html) => {
       job_id: job.decoratedJobPosting.jobPosting.id,
       job_name: job.decoratedJobPosting.jobPosting.title,
       company: job.decoratedJobPosting.companyName,
-      logo: (!_.isNil(job.decoratedJobPosting.decoratedCompany)) ? job.decoratedJobPosting.decoratedCompany.companyLogo.urn : 'default',
+      logo: (!_.isNil(job.decoratedJobPosting.decoratedCompany) && !_.isNil(job.decoratedJobPosting.decoratedCompany.companyLogo)) ? job.decoratedJobPosting.decoratedCompany.companyLogo.urn : 'default',
       location: job.decoratedJobPosting.formattedLocation,
       description: job.decoratedJobPosting.formattedDescription,
       detail_url: job.viewJobTextUrl.split('?')[0]
