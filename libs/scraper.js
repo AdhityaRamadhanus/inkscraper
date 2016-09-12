@@ -1,6 +1,6 @@
 // Standart Test :PASSED
 const cheerio = require('cheerio')
-const scrap = scrap || {}
+const scrap = {}
 // It's advised to use promised style when calling these scraper
 // so every error in here will be caught rather than creating handle for every error
 scrap.getJobs = (html) => {
