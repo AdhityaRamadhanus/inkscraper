@@ -1,5 +1,4 @@
-
-const graphql = require ('graphql')
+const graphql = require('graphql')
 const mongoResolver = require('../resolvers/mongodb')
 const resolver = mongoResolver
 var MixedType = new graphql.GraphQLScalarType({
@@ -12,13 +11,13 @@ var MixedType = new graphql.GraphQLScalarType({
     return value
   },
   parseLiteral: (ast) => {
-    if (ast.kind !== Kind.STRING) {
-      throw new GraphQLError('Query error: Can only parse strings got a: ' + ast.kind, [ast])
+    if (ast.kind !== graphql.Kind.STRING) {
+      throw new graphql.GraphQLError('Query error: Can only parse strings got a: ' + ast.kind, [ast])
     }
     return ast.value
   }
 })
-var JobsType = new graphql.GraphQLObjectType({  
+var JobsType = new graphql.GraphQLObjectType({
   name: 'Job',
   fields: {
     id: {
@@ -36,8 +35,7 @@ var JobsType = new graphql.GraphQLObjectType({
   }
 })
 
-
-var JobsDetailType = new graphql.GraphQLObjectType({  
+var JobsDetailType = new graphql.GraphQLObjectType({
   name: 'JobDetails',
   fields: {
     id: {
@@ -67,7 +65,7 @@ var JobsDetailType = new graphql.GraphQLObjectType({
   }
 })
 
-var queryType = new graphql.GraphQLObjectType({  
+var queryType = new graphql.GraphQLObjectType({
   name: 'Query',
   fields: {
     jobs: {
@@ -91,6 +89,7 @@ var queryType = new graphql.GraphQLObjectType({
   }
 })
 
-module.exports = new graphql.GraphQLSchema({  
+module.exports = new graphql.GraphQLSchema({
   query: queryType
 })
+

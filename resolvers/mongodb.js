@@ -5,7 +5,7 @@ module.exports.getOne = (roots, args, req) => {
   return new Promise((resolve, reject) => {
     Job.findOne({job_id: args.id}, (err, job) => {
       if (err) reject(err)
-      else{
+      else {
         var resolvedjob = {
           id: job.job_id,
           title: job.job_name,
@@ -27,7 +27,7 @@ module.exports.getAll = (roots, args, req) => {
       .lean()
       .exec((err, jobs) => {
         if (err) reject(err)
-        else{
+        else {
           var resolvedjobs = jobs.map((job) => {
             return {
               id: job.job_id,
@@ -45,7 +45,7 @@ module.exports.getAll = (roots, args, req) => {
 module.exports.searchJobs = (roots, args, req) => {
   return new Promise((resolve, reject) => {
     if (!req.query.q) reject(new Error('Search query is empty'))
-    else{
+    else {
       Job
         .find(
           {$text: {$search: req.query.q}},
@@ -55,7 +55,7 @@ module.exports.searchJobs = (roots, args, req) => {
         .select('job_id job_name company location')
         .exec((err, jobs) => {
           if (err) reject(err)
-          else{
+          else {
             var resolvedjobs = jobs.map((job) => {
               return {
                 id: job.job_id,

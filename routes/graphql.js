@@ -5,7 +5,7 @@ const graphqlMiddleware = require('express-graphql')
 const router = express.Router()
 const Schema = require('../models/graphql')
 
-router.all('/', 
+router.all('/',
   graphqlMiddleware({
     schema: Schema,
     pretty: true
