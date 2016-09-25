@@ -18,6 +18,8 @@
     "debug": "~2.2.0",
     "dotenv": "^2.0.0",
     "express": "~4.13.1",
+    "express-graphql": "^0.5.4",
+    "graphql": "^0.7.0",
     "http-status": "^0.2.2",
     "lodash": "^4.15.0",
     "mongoose": "^4.4.17",
@@ -43,7 +45,7 @@
   },
   "pre-commit": "check",
   "standard": {
-    "globals" : [
+    "globals": [
       "_"
     ],
     "ignore": [
