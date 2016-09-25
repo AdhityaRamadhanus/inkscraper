@@ -2,7 +2,7 @@
 const path = require('path')
 const logger = require('morgan')
 const bodyParser = require('body-parser')
-const loader = require('./helpers/loader').loadRoute
+const loader = require('../helpers/loader').loadRoute
 
 module.exports = (app, express) => {
   // app var
@@ -16,7 +16,7 @@ module.exports = (app, express) => {
 
   // App Routes
   if (process.env.APIDOC === 'true') {
-    app.use('/apidoc', express.static(path.join(__dirname, '/apidoc')))
+    app.use('/apidoc', express.static(path.join(__dirname, '..', '/apidoc')))
   }
-  loader(path.join(__dirname, 'routes'), app)
+  loader(path.join(__dirname, '..', 'routes'), app)
 }

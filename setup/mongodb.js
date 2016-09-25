@@ -1,5 +1,5 @@
 // Standard Test : PASSED
-module.exports = function (dbURI, mongoose) {
+module.exports = (dbURI, mongoose) => {
   mongoose.connect(dbURI) // connect to our database
   // Connected
   mongoose.connection.on('connected', function () {
@@ -20,4 +20,6 @@ module.exports = function (dbURI, mongoose) {
       process.exit(0)
     })
   })
+
+  require('../models/Jobs')
 }
