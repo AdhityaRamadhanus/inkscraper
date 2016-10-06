@@ -6,7 +6,7 @@
     "start": "nodemon server.js",
     "test": "node_modules/.bin/mocha --timeout=15000",
     "check": "standard",
-    "gen-doc": "apidoc -i routes/ -o apidoc"
+    "gen-doc": "apidoc -i app/routes/ -o apidoc"
   },
   "dependencies": {
     "apicache": "0.0.14",
