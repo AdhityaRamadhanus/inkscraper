@@ -8,8 +8,8 @@ global._ = require('lodash')
 
 require('dotenv').config()
 
-const setupApp = require('./setup/express')
-const setupDB = require('./setup/mongodb')
+const setupApp = require('./app/setup/express')
+const setupDB = require('./app/setup/mongodb')
 
 setupDB(process.env.MONGOLAB_URI, mongoose)
 setupApp(app, express)

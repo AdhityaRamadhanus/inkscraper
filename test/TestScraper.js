@@ -4,7 +4,7 @@ var it = require('mocha').it
 require('should')
 var fs = require('fs')
 var path = require('path')
-var scraper = require('../libs/scraper')
+var scraper = require('../app/libs/scraper')
 describe('Scraper Function', function () {
   // this simplistic test case seriously need some change
   it('Should get 25 jobs and one of them is Senior Advisor, Planning and Performance Monitoring and Assessment', function (done) {
@@ -12,11 +12,7 @@ describe('Scraper Function', function () {
     fs.readFile(path.join(__dirname, '/LinkedinTestViewAll.html.test'), 'utf8', function (err, data) {
       if (err) throw err
       var rawJobs = scraper.getJobs(data)
-      /*var specificJobs = rawJobs.filter(function (e) {
-        return e.job_name === 'Senior Advisor, Planning and Performance Monitoring and Assessment'
-      })*/
       rawJobs.length.should.equal(25)
-      // specificJobs.length.should.equal(1)
       done()
     })
   })
