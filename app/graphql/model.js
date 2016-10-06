@@ -1,5 +1,5 @@
 const graphql = require('graphql')
-const mongoResolver = require('../resolvers/mongodb')
+const mongoResolver = require('./resolver')
 const resolver = mongoResolver
 var MixedType = new graphql.GraphQLScalarType({
   name: 'mixed',

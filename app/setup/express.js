@@ -16,7 +16,7 @@ module.exports = (app, express) => {
 
   // App Routes
   if (process.env.APIDOC === 'true') {
-    app.use('/apidoc', express.static(path.join(__dirname, '..', '/apidoc')))
+    app.use('/apidoc', express.static(path.join(__dirname, '../../apidoc')))
   }
   loader(path.join(__dirname, '..', 'routes'), app)
 }
