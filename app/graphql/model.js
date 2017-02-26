@@ -3,7 +3,7 @@ const mongoResolver = require('./resolver')
 const resolver = mongoResolver
 var MixedType = new graphql.GraphQLScalarType({
   name: 'mixed',
-  escription: 'stringified json object that holds mongoose mixed type',
+  description: 'stringified json object that holds mongoose mixed type',
   serialize: (value) => {
     return value
   },
