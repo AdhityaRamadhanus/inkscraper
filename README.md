@@ -17,6 +17,7 @@
   - Scrap Details Page (Job Details Page)
   - Restful API for jobs scraped from linkedin
   - Full-text search using built-in mongoose (of course built-in mongodb too)
+  </blockquote>
 </p>
 
 Installation
@@ -44,6 +45,10 @@ Documentation
 * npm run gen-doc
 * add APIDOC=true in .env
 * enjoy, documentation can be found in "/apidoc"
+
+Known Problems
+------------
+Like i said, scraping linkedin jobs can be considered an infringement of linkedin TOS so sometime you may get 999 status code even if you run this from your local computer
 
 License
 ----
