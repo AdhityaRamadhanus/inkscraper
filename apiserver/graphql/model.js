@@ -1,7 +1,7 @@
 const graphql = require('graphql')
 const mongoResolver = require('./resolver')
 const resolver = mongoResolver
-var MixedType = new graphql.GraphQLScalarType({
+const MixedType = new graphql.GraphQLScalarType({
   name: 'mixed',
   description: 'stringified json object that holds mongoose mixed type',
   serialize: (value) => {
@@ -17,7 +17,7 @@ var MixedType = new graphql.GraphQLScalarType({
     return ast.value
   }
 })
-var JobsType = new graphql.GraphQLObjectType({
+const JobsType = new graphql.GraphQLObjectType({
   name: 'Job',
   fields: {
     id: {
@@ -35,7 +35,7 @@ var JobsType = new graphql.GraphQLObjectType({
   }
 })
 
-var JobsDetailType = new graphql.GraphQLObjectType({
+const JobsDetailType = new graphql.GraphQLObjectType({
   name: 'JobDetails',
   fields: {
     id: {
@@ -65,7 +65,7 @@ var JobsDetailType = new graphql.GraphQLObjectType({
   }
 })
 
-var queryType = new graphql.GraphQLObjectType({
+const queryType = new graphql.GraphQLObjectType({
   name: 'Query',
   fields: {
     jobs: {

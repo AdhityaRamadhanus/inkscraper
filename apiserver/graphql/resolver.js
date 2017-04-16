@@ -1,26 +1,31 @@
 const mongoose = require('mongoose')
 const Job = mongoose.model('Job')
 
-module.exports.getOne = (roots, args, req) => {
+exports.getOne = (roots, args, req) => {
   return new Promise((resolve, reject) => {
-    Job.findOne({job_id: args.id}, (err, job) => {
-      if (err) reject(err)
-      else {
-        var resolvedjob = {
-          id: job.job_id,
-          title: job.job_name,
-          other_details: job.other_details,
-          company: job.company,
-          location: job.location,
-          detail_url: job.detail_url
+    let query = {
+      job_id: args.id
+    }
+    Job
+      .findOne(query)
+      .exec((err, job) => {
+        if (err) reject(err)
+        else {
+          let resolvedjob = {
+            id: job.job_id,
+            title: job.job_name,
+            other_details: job.other_details,
+            company: job.company,
+            location: job.location,
+            detail_url: job.detail_url
+          }
+          resolve(resolvedjob)
         }
-        resolve(resolvedjob)
-      }
-    })
+      })
   })
 }
 
-module.exports.getAll = (roots, args, req) => {
+exports.getAll = (roots, args, req) => {
   return new Promise((resolve, reject) => {
     Job
       .find({}, 'job_id job_name company location')
@@ -42,7 +47,7 @@ module.exports.getAll = (roots, args, req) => {
   })
 }
 
-module.exports.searchJobs = (roots, args, req) => {
+exports.searchJobs = (roots, args, req) => {
   return new Promise((resolve, reject) => {
     if (!req.query.q) reject(new Error('Search query is empty'))
     else {
