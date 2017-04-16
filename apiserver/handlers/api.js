@@ -3,6 +3,9 @@
 const mongoose = require('mongoose')
 const Jobs = mongoose.model('Job')
 const status = require('http-status')
+const redisHelper = require('../helpers/rediskey')
+const cache = require('../cache')
+
 /**
 * @api {get} api/jobs Request all jobs
 * @apiName GetJobs
@@ -26,18 +29,33 @@ exports.getAllJobs = (req, res, next) => {
     startFrom = 9990
     size = 10
   }
-  let query = {}
-  Jobs
-    .find(query, 'job_id job_name company location')
-    .limit(size)
-    .skip(startFrom)
-    .exec((err, jobs) => {
-      if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({ timestamp: new Date().toISOString(), error: err.toString() })
+  let redisKey = redisHelper.createKeyFromURL({
+    url: req.originalUrl,
+    query: req.query,
+    allowedQuery: ['page', 'limit'],
+    method: req.method
+  })
+  cache.get(redisKey, (data) => {
+    if (data) {
       return res.json({
         timestamp: new Date().toISOString(),
-        data: jobs
+        data: data
       })
-    })
+    }
+    let query = {}
+    Jobs
+      .find(query, 'job_id job_name company location')
+      .limit(size)
+      .skip(startFrom)
+      .exec((err, jobs) => {
+        if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({ timestamp: new Date().toISOString(), error: err.toString() })
+        cache.setex(redisKey, 60, jobs)
+        return res.json({
+          timestamp: new Date().toISOString(),
+          data: jobs
+        })
+      })
+  })
 }
 
 /**
@@ -218,6 +236,8 @@ module.exports.deleteJob = (req, res, next) => {
       }
 */
 module.exports.searchJobs = (req, res, next) => {
+  req.query.q = req.query.q || ''
+
   let page = parseInt(req.query.page, 10) || 1
   let size = parseInt(req.query.limit, 10) || 10
   let startFrom = (page > 1) ? (page - 1) * (size > 50 ? 50 : size) : 0
@@ -225,19 +245,34 @@ module.exports.searchJobs = (req, res, next) => {
     startFrom = 9990
     size = 10
   }
-  Jobs
-    .find(
-      {$text: {$search: req.query.q}},
-      {score: {$meta: 'textScore'}})
-    .sort({score: {$meta: 'textScore'}})
-    .limit(size)
-    .skip(startFrom)
-    .select('job_id job_name company location')
-    .exec((err, jobs) => {
-      if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({timestamp: new Date().toISOString(), error: err.toString()})
+  let redisKey = redisHelper.createKeyFromURL({
+    url: req.originalUrl,
+    query: req.query,
+    allowedQuery: ['page', 'limit', 'q'],
+    method: req.method
+  })
+  cache.get(redisKey, (data) => {
+    if (data) {
       return res.json({
         timestamp: new Date().toISOString(),
-        data: jobs
+        data: data
       })
-    })
+    }
+    Jobs
+      .find(
+        {$text: {$search: req.query.q}},
+        {score: {$meta: 'textScore'}})
+      .sort({score: {$meta: 'textScore'}})
+      .limit(size)
+      .skip(startFrom)
+      .select('job_id job_name company location')
+      .exec((err, jobs) => {
+        if (err) return res.status(status.INTERNAL_SERVER_ERROR).json({timestamp: new Date().toISOString(), error: err.toString()})
+        cache.setex(redisKey, 60, jobs)
+        return res.json({
+          timestamp: new Date().toISOString(),
+          data: jobs
+        })
+      })
+  })
 }
