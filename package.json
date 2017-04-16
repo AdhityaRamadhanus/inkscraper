@@ -3,12 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "nodemon server.js",
+    "start-apiserver": "nodemon apiserver/server.js",
+    "start-scraper": "nodemon scraper/server.js",
     "test": "node_modules/.bin/mocha --timeout=15000",
     "check": "standard",
-    "gen-doc": "apidoc -i app/routes/ -o apidoc"
+    "gen-doc": "apidoc -i apiserver/routes/ -o apidoc"
   },
   "dependencies": {
+    "agenda": "^0.9.1",
+    "agendash": "^0.4.0",
     "apicache": "0.2.2",
     "async": "^2.0.0-rc.5",
     "axios": "^0.14.0",
@@ -26,7 +29,8 @@
     "mongoose-timestamp": "^0.6.0",
     "morgan": "~1.7.0",
     "nodemon": "^1.10.2",
-    "request": "^2.72.0"
+    "request": "^2.72.0",
+    "winston": "^2.3.1"
   },
   "devDependencies": {
     "mocha": "^3.1.0",
