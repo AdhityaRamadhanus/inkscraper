@@ -18,7 +18,8 @@ global.logger = new (winston.Logger)({
       timestamp: true,
       colorize: true
     })
-  ]
+  ],
+  exitOnError: false
 })
 
 db.connectMongo(

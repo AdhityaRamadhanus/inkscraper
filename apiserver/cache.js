@@ -1,3 +1,4 @@
+/* global logger */
 'use strict'
 const redis = require('redis')
 const config = require('./config')
@@ -43,6 +44,6 @@ exports.setex = (key, ttl, data) => {
 
 exports.del = (key) => {
   redisClient.del(key, (err, res) => {
-    if (err) console.error(err)
+    if (err) logger.error(err)
   })
 }

@@ -1,25 +1,17 @@
-// Standard Test : PASSED
-module.exports = (dbURI, mongoose) => {
-  mongoose.connect(dbURI) // connect to our database
-  // Connected
-  mongoose.connection.on('connected', function () {
-    console.log('Mongoose connected')
-  })
-  // Error
-  mongoose.connection.on('error', function (err) {
-    console.log('Mongoose got error : ' + err)
-  })
-  // Disconnected
-  mongoose.connection.on('disconnected', function () {
-    console.log('Mongoose disconnected')
-  })
-  // Node process terminated
-  process.on('SIGINT', function () {
-    mongoose.connection.close(function () {
-      console.log('Disconnect mongoose')
-      process.exit(0)
-    })
-  })
+/* global logger */
+'use strict'
+const mongoose = require('mongoose')
+mongoose.Promise = require('bluebird')
 
+module.exports = (dbURI) => {
+  mongoose.connect(dbURI)
+  // Connected
+  mongoose.connection
+    .on('connected', () => {
+      logger.info('Connected to MongoDB')
+    })
+    .on('error', (err) => {
+      logger.error('Failed to connect to Mongodb', err)
+    })
   require('../../models/Jobs')
 }
