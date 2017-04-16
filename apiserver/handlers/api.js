@@ -28,7 +28,7 @@ exports.getAllJobs = (req, res, next) => {
   }
   let query = {}
   Jobs
-    .find({}, 'job_id job_name company location')
+    .find(query, 'job_id job_name company location')
     .limit(size)
     .skip(startFrom)
     .exec((err, jobs) => {

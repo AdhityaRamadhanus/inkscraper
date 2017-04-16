@@ -1,3 +1,4 @@
+/* global logger */
 'use strict'
 
 const mongoose = require('mongoose')
@@ -5,9 +6,8 @@ const mgoJobs = mongoose.model('Job')
 const axios = require('axios')
 const scraper = require('../scraper')
 const async = require('async')
-const winston = require('winston')
 
-exports.getDetailJobs = (task, done)=> {
+exports.getDetailJobs = (task, done) => {
   async.waterfall([
     (callback) => {
       let query = {
@@ -50,10 +50,10 @@ exports.getDetailJobs = (task, done)=> {
           })
           .catch((response) => {
             if (response instanceof Error) {
-                // Something happened in setting up the request that triggered an Error
-                logger.error('Error', response.message)
+              // Something happened in setting up the request that triggered an Error
+              logger.error('Error', response.message)
             } else {
-                logger.error('Status Code', response.status)
+              logger.error('Status Code', response.status)
             }
             return cb(null)
           })
@@ -61,7 +61,8 @@ exports.getDetailJobs = (task, done)=> {
         logger.info('Updated job details', updated)
         return callback(null)
       })
-    }], () => {
-      return done()
-    })
+    }
+  ], () => {
+    return done()
+  })
 }
