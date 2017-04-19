@@ -4,7 +4,7 @@ var it = require('mocha').it
 require('should')
 var fs = require('fs')
 var path = require('path')
-var scraper = require('../app/libs/scraper')
+var scraper = require('../scraper/scraper')
 describe('Scraper Function', function () {
   // this simplistic test case seriously need some change
   it('Should get 25 jobs and one of them is Senior Advisor, Planning and Performance Monitoring and Assessment', function (done) {

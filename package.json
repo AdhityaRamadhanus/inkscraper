@@ -1,18 +1,17 @@
 {
-  "name": "HireMe",
-  "version": "0.1.0",
+  "name": "inkscraper",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "start-apiserver": "nodemon apiserver/server.js",
     "start-scraper": "nodemon scraper/server.js",
-    "test": "node_modules/.bin/mocha --timeout=15000",
+    "test": "MONGODB_URI=mongodb://localhost:27017/test node_modules/.bin/mocha --timeout=15000",
     "check": "standard",
     "gen-doc": "apidoc -i apiserver/routes/ -o apidoc"
   },
   "dependencies": {
     "agenda": "^0.9.1",
     "agendash": "^0.4.0",
-    "apicache": "0.2.2",
     "async": "^2.0.0-rc.5",
     "axios": "^0.14.0",
     "bluebird": "^3.4.0",
@@ -41,12 +40,12 @@
     "supertest": "^2.0.0"
   },
   "apidoc": {
-    "name": "Linkedin Scraper",
-    "version": "0.1.0",
+    "name": "inkscraper",
+    "version": "1.0.0",
     "description": "Linkedin Jobs scraper",
     "apidoc": {
       "title": "Linkedin Scraper REST API Documentation",
-      "url": "https://github.com/AdhityaRamadhanus/Linkedin-Scraper"
+      "url": "https://github.com/AdhityaRamadhanus/inkscraper"
     }
   },
   "pre-commit": "check",

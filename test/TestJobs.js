@@ -2,7 +2,7 @@
 var describe = require('mocha').describe
 var it = require('mocha').it
 require('should')
-var server = require('../server')
+var server = require('../apiserver/server')
 var supertest = require('supertest')
 
 describe('Jobs Endpoint', function () {
@@ -36,7 +36,7 @@ describe('Jobs Endpoint', function () {
           throw err
         }
         res.status.should.equal(200)
-        res.body.job.job_id.should.equal('Test100')
+        res.body.data.job_id.should.equal('Test100')
         done()
       })
   })
