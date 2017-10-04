@@ -6,3 +6,6 @@ patch:
   'npm:ms:20170412':
     - compression > debug > ms:
         patched: '2017-05-27T02:54:07.094Z'
+  'npm:debug:20170905':
+    - mongoose > mquery > debug:
+        patched: '2017-09-30T02:54:07.250Z'
