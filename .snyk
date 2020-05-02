@@ -1,5 +1,5 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.7.1
+version: v1.14.1
 ignore: {}
 # patches apply the minimum changes required to fix a vulnerability
 patch:
@@ -9,3 +9,10 @@ patch:
   'npm:debug:20170905':
     - mongoose > mquery > debug:
         patched: '2017-09-30T02:54:07.250Z'
+  SNYK-JS-LODASH-567746:
+    - lodash:
+        patched: '2020-05-02T04:20:27.872Z'
+    - async > lodash:
+        patched: '2020-05-02T04:20:27.872Z'
+    - mongoose > async > lodash:
+        patched: '2020-05-02T04:20:27.872Z'
