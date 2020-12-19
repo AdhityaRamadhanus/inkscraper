@@ -27,7 +27,7 @@
     "graphql": "^0.9.3",
     "http-status": "^0.2.2",
     "lodash": "^4.15.0",
-    "mongoose": "^4.4.17",
+    "mongoose": "^5.11.7",
     "mongoose-timestamp": "^0.6.0",
     "morgan": "~1.9.0",
     "nodemon": "^1.10.2",
