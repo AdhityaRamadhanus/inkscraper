@@ -31,7 +31,7 @@
     "mongoose-timestamp": "^0.6.0",
     "morgan": "~1.9.0",
     "nodemon": "^1.10.2",
-    "redis": "^2.7.1",
+    "redis": "^3.1.1",
     "request": "^2.72.0",
     "winston": "^2.3.1",
     "snyk": "^1.41.1"
