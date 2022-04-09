@@ -13,8 +13,8 @@
   },
   "dependencies": {
     "agenda": "^0.9.1",
-    "agendash": "^0.4.0",
-    "async": "^2.3.0",
+    "agendash": "^2.0.0",
+    "async": "^3.2.2",
     "axios": "^0.16.1",
     "bluebird": "^3.4.0",
     "body-parser": "~1.18.2",
@@ -27,13 +27,13 @@
     "graphql": "^0.9.3",
     "http-status": "^0.2.2",
     "lodash": "^4.15.0",
-    "mongoose": "^4.4.17",
+    "mongoose": "^5.7.3",
     "mongoose-timestamp": "^0.6.0",
     "morgan": "~1.9.0",
     "nodemon": "^1.10.2",
     "redis": "^2.7.1",
     "request": "^2.72.0",
-    "winston": "^2.3.1",
+    "winston": "^3.3.0",
     "snyk": "^1.41.1"
   },
   "devDependencies": {
