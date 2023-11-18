@@ -12,8 +12,8 @@
     "prepublish": "npm run snyk-protect"
   },
   "dependencies": {
-    "agenda": "^0.9.1",
-    "agendash": "^0.4.0",
+    "agenda": "^2.0.0",
+    "agendash": "^1.0.0",
     "async": "^2.3.0",
     "axios": "^0.16.1",
     "bluebird": "^3.4.0",
@@ -27,7 +27,7 @@
     "graphql": "^0.9.3",
     "http-status": "^0.2.2",
     "lodash": "^4.15.0",
-    "mongoose": "^4.4.17",
+    "mongoose": "^5.3.9",
     "mongoose-timestamp": "^0.6.0",
     "morgan": "~1.9.0",
     "nodemon": "^1.10.2",
